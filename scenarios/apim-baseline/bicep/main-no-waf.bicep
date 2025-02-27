@@ -17,14 +17,13 @@ param identifier string
 param location string = deployment().location
 param enableTelemetry bool = true
 
-// Variables
+// Variables for resource naming
 var resourceSuffix = '${workloadName}-${environment}-${location}-${identifier}'
 var networkingResourceGroupName = 'rg-networking-${resourceSuffix}'
 var sharedResourceGroupName = 'rg-shared-${resourceSuffix}'
 var apimResourceGroupName = 'rg-apim-${resourceSuffix}'
-var vnetName = 'vnet-apim-cs-${resourceSuffix}'
 
-// Resource Groups
+// Create resource groups
 resource networkingResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   name: networkingResourceGroupName
   location: location
@@ -40,8 +39,8 @@ resource apimResourceGroup 'Microsoft.Resources/resourceGroups@2021-04-01' = {
   location: location
 }
 
-// Networking deployment
-module networking 'networking/networking-no-waf.bicep' = {
+// Deploy networking
+module networking './networking/networking.bicep' = {
   scope: resourceGroup(networkingResourceGroup.name)
   name: 'networkingDeploy'
   params: {
@@ -50,8 +49,8 @@ module networking 'networking/networking-no-waf.bicep' = {
   }
 }
 
-// Shared resources deployment (Key Vault, Application Insights)
-module shared 'shared/shared-no-waf.bicep' = {
+// Deploy shared resources
+module shared './shared/shared.bicep' = {
   scope: resourceGroup(sharedResourceGroup.name)
   name: 'sharedDeploy'
   params: {
@@ -59,45 +58,37 @@ module shared 'shared/shared-no-waf.bicep' = {
     resourceSuffix: resourceSuffix
     resourceGroupName: sharedResourceGroup.name
     networkingResourceGroupName: networkingResourceGroup.name
-    vnetName: vnetName
+    vnetName: 'vnet-apim-cs-${resourceSuffix}'
     privateEndpointSubnetid: networking.outputs.privateEndpointSubnetId
     workloadName: workloadName
     environment: environment
     identifier: identifier
   }
+  dependsOn: [
+    networking
+  ]
 }
 
-// APIM deployment
-module apim 'apim/apim.bicep' = {
+// Deploy APIM
+module apim './apim/apim.bicep' = {
   scope: resourceGroup(apimResourceGroup.name)
   name: 'apimDeploy'
   params: {
     apimName: 'apim-${resourceSuffix}'
     location: location
     apimSubnetId: networking.outputs.apimSubnetId
+    appInsightsName: shared.outputs.appInsightsName
+    appInsightsId: shared.outputs.appInsightsId
+    appInsightsInstrumentationKey: shared.outputs.appInsightsInstrumentationKey
     keyVaultName: shared.outputs.keyVaultName
     keyVaultResourceGroupName: sharedResourceGroup.name
     networkingResourceGroupName: networkingResourceGroup.name
     apimRG: apimResourceGroup.name
-    vnetName: vnetName
-    appInsightsName: shared.outputs.appInsightsName
-    appInsightsId: shared.outputs.appInsightsId
-    appInsightsInstrumentationKey: shared.outputs.appInsightsInstrumentationKey
+    vnetName: 'vnet-apim-cs-${resourceSuffix}'
   }
-}
-
-// Telemetry deployment
-resource telemetrydeployment 'Microsoft.Resources/deployments@2021-04-01' = if (enableTelemetry) {
-  name: 'pid-4b38ebad-5112-47a8-aa88-3cae1d66cabb-${uniqueString(subscription().id)}'
-  location: location
-  properties: {
-    mode: 'Incremental'
-    template: {
-      '$schema': 'https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#'
-      contentVersion: '1.0.0.0'
-      resources: []
-    }
-  }
+  dependsOn: [
+    shared
+  ]
 }
 
 // Outputs

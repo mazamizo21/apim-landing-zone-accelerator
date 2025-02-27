@@ -1,21 +1,7 @@
 param location string
 param resourceSuffix string
 
-@description('Address prefix for the virtual network')
-param vnetAddressPrefix string = '10.2.0.0/16'
-
-@description('Address prefix for the APIM subnet')
-param apimSubnetPrefix string = '10.2.1.0/24'
-
-@description('Address prefix for private endpoints')
-param privateEndpointSubnetPrefix string = '10.2.2.0/24'
-
-var vnetName = 'vnet-apim-cs-${resourceSuffix}'
-var apimSubnetName = 'snet-apim-${resourceSuffix}'
-var privateEndpointSubnetName = 'snet-pe-${resourceSuffix}'
-
-// Network Security Groups
-resource apimNsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
+resource nsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
   name: 'nsg-apim-${resourceSuffix}'
   location: location
   properties: {
@@ -50,41 +36,34 @@ resource apimNsg 'Microsoft.Network/networkSecurityGroups@2021-02-01' = {
   }
 }
 
-// Virtual Network
 resource vnet 'Microsoft.Network/virtualNetworks@2021-02-01' = {
-  name: vnetName
+  name: 'vnet-apim-cs-${resourceSuffix}'
   location: location
   properties: {
     addressSpace: {
       addressPrefixes: [
-        vnetAddressPrefix
+        '10.2.0.0/16'
       ]
     }
     subnets: [
       {
-        name: apimSubnetName
+        name: 'snet-apim-${resourceSuffix}'
         properties: {
-          addressPrefix: apimSubnetPrefix
+          addressPrefix: '10.2.1.0/24'
           networkSecurityGroup: {
-            id: apimNsg.id
+            id: nsg.id
           }
-          privateEndpointNetworkPolicies: 'Disabled'
-          privateLinkServiceNetworkPolicies: 'Enabled'
-        }
-      }
-      {
-        name: privateEndpointSubnetName
-        properties: {
-          addressPrefix: privateEndpointSubnetPrefix
           privateEndpointNetworkPolicies: 'Disabled'
           privateLinkServiceNetworkPolicies: 'Enabled'
         }
       }
     ]
   }
+  dependsOn: [
+    nsg
+  ]
 }
 
+output apimSubnetId string = '${vnet.id}/subnets/snet-apim-${resourceSuffix}'
 output vnetName string = vnet.name
 output vnetId string = vnet.id
-output apimSubnetId string = '${vnet.id}/subnets/${apimSubnetName}'
-output privateEndpointSubnetId string = '${vnet.id}/subnets/${privateEndpointSubnetName}'

@@ -1,0 +1,37 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "value": "myapim"
+        },
+        "location": {
+            "value": "eastus"
+        },
+        "network": {
+            "value": {
+                "vnetAddressPrefix": "10.0.0.0/16",
+                "apimSubnetPrefix": "10.0.1.0/24"
+            }
+        },
+        "apimConfig": {
+            "value": {
+                "sku": {
+                    "name": "Developer",
+                    "capacity": 1
+                },
+                "publisher": {
+                    "email": "admin@contoso.com",
+                    "name": "Contoso API Management"
+                }
+            }
+        },
+        "tags": {
+            "value": {
+                "environment": "development",
+                "project": "apim-minimal",
+                "deployment": "automated"
+            }
+        }
+    }
+}

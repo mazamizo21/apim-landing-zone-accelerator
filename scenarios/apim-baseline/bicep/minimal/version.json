@@ -1,0 +1,126 @@
+{
+    "solution": "APIM Minimal Deployment",
+    "version": "1.0.0",
+    "releaseDate": "2025-02-27",
+    "components": {
+        "deployment": {
+            "scripts": [
+                {
+                    "name": "deploy-min.ps1",
+                    "description": "Main deployment script",
+                    "version": "1.0.0"
+                },
+                {
+                    "name": "cleanup.ps1",
+                    "description": "Resource cleanup utility",
+                    "version": "1.0.0"
+                }
+            ],
+            "templates": [
+                {
+                    "name": "deploy-min.json",
+                    "description": "ARM deployment template",
+                    "version": "1.0.0"
+                }
+            ]
+        },
+        "monitoring": {
+            "scripts": [
+                {
+                    "name": "health-check.ps1",
+                    "description": "Health validation tool",
+                    "version": "1.0.0"
+                },
+                {
+                    "name": "monitor.ps1",
+                    "description": "Continuous monitoring solution",
+                    "version": "1.0.0"
+                },
+                {
+                    "name": "verify-config.ps1",
+                    "description": "Configuration verification",
+                    "version": "1.0.0"
+                }
+            ]
+        },
+        "testing": {
+            "scripts": [
+                {
+                    "name": "test-solution.ps1",
+                    "description": "Complete solution testing",
+                    "version": "1.0.0"
+                },
+                {
+                    "name": "test-package.ps1",
+                    "description": "Package validation tool",
+                    "version": "1.0.0"
+                }
+            ]
+        },
+        "documentation": {
+            "files": [
+                {
+                    "name": "README.md",
+                    "description": "Main documentation",
+                    "version": "1.0.0"
+                },
+                {
+                    "name": "QUICKSTART.md",
+                    "description": "Getting started guide",
+                    "version": "1.0.0"
+                },
+                {
+                    "name": "MAINTENANCE.md",
+                    "description": "Maintenance procedures",
+                    "version": "1.0.0"
+                },
+                {
+                    "name": "TROUBLESHOOTING.md",
+                    "description": "Issue resolution guide",
+                    "version": "1.0.0"
+                },
+                {
+                    "name": "CHECKLIST.md",
+                    "description": "Deployment checklist",
+                    "version": "1.0.0"
+                },
+                {
+                    "name": "SUMMARY.md",
+                    "description": "Solution overview",
+                    "version": "1.0.0"
+                }
+            ]
+        }
+    },
+    "requirements": {
+        "azure": {
+            "powershell": ">=7.0.0",
+            "cli": ">=2.40.0",
+            "subscription": "Required",
+            "permissions": [
+                "Contributor",
+                "User Access Administrator"
+            ]
+        },
+        "local": {
+            "powershell": ">=7.0.0",
+            "modules": [
+                "Az",
+                "Az.ApiManagement",
+                "Az.Network"
+            ]
+        }
+    },
+    "maintenance": {
+        "releaseSchedule": "Monthly",
+        "supportedVersions": ["1.0.0"],
+        "deprecationPolicy": "6 months",
+        "securityUpdates": "Critical fixes within 48 hours"
+    },
+    "metadata": {
+        "created": "2025-02-27T04:05:00Z",
+        "author": "Azure API Management Team",
+        "repository": "apim-landing-zone-accelerator",
+        "license": "MIT"
+    }
+}

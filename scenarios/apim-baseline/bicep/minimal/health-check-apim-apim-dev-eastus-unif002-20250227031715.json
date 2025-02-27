@@ -1,0 +1,20 @@
+{
+    "Status":  {
+                   "Overall":  "Unhealthy",
+                   "Components":  {
+                                      "Service":  "Unhealthy"
+                                  }
+               },
+    "Timestamp":  {
+                      "value":  "\/Date(1740644235400)\/",
+                      "DisplayHint":  2,
+                      "DateTime":  "Thursday, February 27, 2025 3:17:15 AM"
+                  },
+    "ApimName":  "apim-apim-apim-dev-eastus-unif002",
+    "Metrics":  {
+
+                },
+    "Details":  {
+
+                }
+}

@@ -1,0 +1,25 @@
+{
+    "Status":  {
+                   "Overall":  "Unhealthy",
+                   "Components":  {
+                                      "NetworkMode":  "Warning",
+                                      "GatewayEndpoint":  "Warning",
+                                      "PortalEndpoint":  "Warning",
+                                      "Service":  "Unhealthy",
+                                      "ManagementEndpoint":  "Warning",
+                                      "Provisioning":  "Healthy"
+                                  }
+               },
+    "Timestamp":  {
+                      "value":  "\/Date(1740644236674)\/",
+                      "DisplayHint":  2,
+                      "DateTime":  "Thursday, February 27, 2025 3:17:16 AM"
+                  },
+    "ApimName":  "apim-apimdev865",
+    "Metrics":  {
+
+                },
+    "Details":  {
+
+                }
+}
